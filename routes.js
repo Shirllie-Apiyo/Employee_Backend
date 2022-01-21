@@ -160,5 +160,19 @@ router.route('/employees/:id').put((req,res) =>
     })
 });
 
+// create a route
+router.route('/countemployees').get(function(req,res)
+{
+    Employee.count({},function(err,result)
+    {
+        if (err){
+            res.send(err)
+        }
+        else{
+            res.json({'count':result})
+        }
+    });
+});
+
 
 module.exports = router;
