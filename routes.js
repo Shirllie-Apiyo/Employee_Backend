@@ -1,6 +1,7 @@
 // step 2: We create our routes / post/ get/ update and delete
 const express = require("express");
 const { object } = require("webidl-conversions");
+const { distinct } = require("./models/Employee");
 const Employee = require("./models/Employee") // access our model
 
 //create a router
@@ -161,7 +162,7 @@ router.route('/employees/:id').put((req,res) =>
 });
 
 // create a route
-router.route('/countemployees').get(function(req,res)
+router.route('/countEmployees').get(function(req,res)
 {
     Employee.count({},function(err,result)
     {
@@ -169,10 +170,25 @@ router.route('/countemployees').get(function(req,res)
             res.send(err)
         }
         else{
-            res.json({'count':result})
+            res.json({'count':result, 'name':'Employees'})
         }
     });
 });
+
+// count departments
+router.route('/countDepartments').get(function(req,res)
+{
+    Employee.find().distinct('department',function(err,result)
+    {
+        if (err){
+            res.send(err)
+        }
+        else{
+            res.json({'count':result.length, 'name':'Departments'})
+        }
+    });
+});
+
 
 
 module.exports = router;
