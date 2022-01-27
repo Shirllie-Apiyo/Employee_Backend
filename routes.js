@@ -249,7 +249,7 @@ userSchema.findOne({
     let jwtToken = jwt.sign({
         email:getUser.email,
         userId:getUser._id
-    },"longer-secret-is-better",{
+    },"Akxjkxod#ndic1124",{
         expiresIn:"1h"
     });
     res.status(200).json({
