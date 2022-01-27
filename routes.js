@@ -3,7 +3,9 @@ const express = require("express");
 const { object } = require("webidl-conversions");
 const { distinct } = require("./models/Employee");
 const Employee = require("./models/Employee") // access our model
-
+const jwt = require("jsonwebtoken");
+const bcrypt = require("bcrypt");
+const userSchema = require("./models/User")
 //create a router
 const router = express.Router()
 
@@ -201,5 +203,26 @@ router.route('/pie').get(function(req,res)
     });
 });
 
+
+// sign-up route
+router.post("/register-user",(req,res, next)=>{
+    bcrypt.hash(req.body.password,10).then((hash)=>{
+        const user = new userSchema({
+            name:req.body.name,
+            email:req.body.email,
+            password:hash
+        });
+        user.save().then((response)=>{
+            res.status(201).json({
+                message:"User successfully created!",
+                result:response
+            });
+        }).catch(error =>{
+            res.status(500).json({
+                error:error
+            });
+        });
+    });
+});
 
 module.exports = router;
