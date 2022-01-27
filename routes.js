@@ -189,6 +189,17 @@ router.route('/countDepartments').get(function(req,res)
     });
 });
 
+router.route('/pie').get(function(req,res)
+{
+    Employee.find().distinct('department',function(err,result){
+        if(err){
+            res.send(err)
+        }
+        else{
+            res.send([{"data":[47,9,28,54,77]}])
+        }
+    });
+});
 
 
 module.exports = router;
