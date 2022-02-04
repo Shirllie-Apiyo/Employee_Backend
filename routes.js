@@ -5,7 +5,9 @@ const { distinct } = require("./models/Employee");
 const Employee = require("./models/Employee") // access our model
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
-const userSchema = require("./models/User")
+const userSchema = require("./models/User");
+const authorize = require("./verify");
+
 //create a router
 const router = express.Router()
 
@@ -43,7 +45,7 @@ router.post("/add", async(req, res) => {
     }
 });//END
 
-router.get('/employees', function(req,res)
+router.route('/employees').get(authorize,(req,res) =>
 {
     Employee.find({}, function(err,data){
         if(err){
@@ -122,8 +124,8 @@ router.route('/employees/:id').delete((req,res) =>
 
 // route to post and find by phone
 // route to delete by _id or first_name
-
-router.route('/employees/:id').get((req,res) =>
+// below endpoint need to authorize using a token
+router.route('/employees/:id').get(authorize,(req,res) =>
 {
     Employee.findById(req.params.id, (error,data)=>
     {
@@ -150,7 +152,7 @@ router.route('/employees/:id').get((req,res) =>
 });
 // update someone by residence id
 
-router.route('/employees/:id').put((req,res) =>
+router.route('/employees/:id').put(authorize,(req,res) =>
 {
     Employee.findByIdAndUpdate(req.params.id,{$set:{department:req.body.department}}, (error,data)=>
     {
@@ -263,6 +265,7 @@ userSchema.findOne({
     });
 });
 });
+//client applications i.e angular require to pass the token to access some routes employees
 
 
 
